@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-
-import base64, hashlib, msvcrt
-
+import base64
+import hashlib
+import msvcrt
 
 UTF8 = 'utf-8'
 
@@ -30,8 +29,8 @@ def get_pass(passwd, domain, salt, size=16, encoding=UTF8):
     h1.update(passwd.encode(encoding))
     h.update(h1.digest() + (domain + salt).encode(encoding))
     return base64.urlsafe_b64encode(h.digest()).decode(encoding)[:size]
-    
-    
+
+
 def input_size(info):
     while True:
         try:
@@ -44,40 +43,38 @@ def input_size(info):
                 continue
             return a
         except ValueError:
-            info = 'size need to be a number, input again:' 
-            
+            info = 'size need to be a number, input again:'
+
 
 def input_pwd(info):
     """safe input passwd, echo * but no real alpha."""
     # print(info, end='')
     for b in info.encode():
-        msvcrt.putch(bytes([b,]))
-    chars = []   
-    while True:  
-        try:  
-            ch = msvcrt.getch().decode()  
-            if ch in '\r\n':            
-                 break   
-            elif ch == '\b':  
-                 if chars:    
-                     del chars[-1]   
-                     msvcrt.putch(b'\b') 
-                     msvcrt.putch(b' ')
-                     msvcrt.putch(b'\b')                    
-            else:  
-                chars.append(ch)  
-                msvcrt.putch(b'*')  
-        except:  
-            return input("Warning - input will not be hided: ")  
+        msvcrt.putch(bytes([b, ]))
+    chars = []
+    while True:
+        try:
+            ch = msvcrt.getch().decode()
+            if ch in '\r\n':
+                break
+            elif ch == '\b':
+                if chars:
+                    del chars[-1]
+                    msvcrt.putch(b'\b')
+                    msvcrt.putch(b' ')
+                    msvcrt.putch(b'\b')
+            else:
+                chars.append(ch)
+                msvcrt.putch(b'*')
+        except:
+            return input("Warning - input will not be hided: ")
     print()
-    return ''.join(chars) 
-        
-    
+    return ''.join(chars)
+
+
 if __name__ == '__main__':
-    password = get_pass(domain = input('input website domain or name: '),
-                   salt = input('input user name or salt: '),
-                   passwd = input_pwd('input your source secret: '),
-                   size = input_size("input password_size, press 'enter'"
-                   + "to use 16: ") or 16)
-    print('Your Password Is: %s' %password)
-    
+    password = get_pass(domain=input('input website domain or name: '),
+                        salt=input('input user name or salt: '),
+                        passwd=input_pwd('input your source secret: '),
+                        size=input_size("input password_size, press 'enter' to use 16: ") or 16)
+    print('Your Password Is: %s' % password)
